@@ -17,7 +17,7 @@ use yii\web\IdentityInterface;
  * @property integer $update_at
  * @property integer $status
  */
-class Admin extends \yii\db\ActiveRecord implements IdentityInterface
+class Admin extends \yii\db\ActiveRecord
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
@@ -89,7 +89,7 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
     public function setPassword($password)
     {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
-        var_dump($this->password_hash);exit;
+        echo $this->password_hash;
     }
 
     /**
@@ -101,30 +101,4 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
         return new AdminQuery(get_called_class());
     }
 
-
-      public static function findIdentity($id)
-      {
-          return static::findOne($id);
-      }
- 
-      public static function findIdentityByAccessToken($token, $type = null)
-      {
-          return static::findOne(['access_token' => $token]);
-      }
- 
-      public function getId()
-      {
-          return $this->id;
-      }
- 
-      public function getAuthKey()
-      {
-          return $this->authKey;
-      }
- 
-      public function validateAuthKey($authKey)
-      {
-          return $this->authKey === $authKey;
-      }
- 
 }
