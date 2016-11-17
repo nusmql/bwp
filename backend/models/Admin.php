@@ -16,8 +16,10 @@ use yii\web\IdentityInterface;
  * @property integer $create_at
  * @property integer $update_at
  * @property integer $status
+ * @property string $auth_key
+ * @property string $password_reset_token
  */
-class Admin extends \yii\db\ActiveRecord
+class Admin extends \yii\db\ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
@@ -36,7 +38,7 @@ class Admin extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+        TimestampBehavior::className(),
         ];
     }
 
@@ -46,12 +48,14 @@ class Admin extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'password_hash', 'create_at', 'update_at'], 'required'],
-            [['create_at', 'update_at', 'status'], 'integer'],
-            [['username', 'password_hash'], 'string', 'max' => 255],
-            [['username'], 'unique'],
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+        [['username', 'password_hash', 'create_at', 'update_at', 'auth_key'], 'required'],
+        [['create_at', 'update_at', 'status'], 'integer'],
+        [['username', 'password_hash', 'password_reset_token'], 'string', 'max' => 255],
+        [['auth_key'], 'string', 'max' => 32],
+        [['username'], 'unique'],
+        [['password_reset_token'], 'unique'],        
+        ['status', 'default', 'value' => self::STATUS_ACTIVE],
+        ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
         ];
     }
 
@@ -61,13 +65,24 @@ class Admin extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'username' => 'Username',
-            'password_hash' => 'Password Hash',
-            'create_at' => 'Create At',
-            'update_at' => 'Update At',
-            'status' => 'Status',
+        'id' => 'ID',
+        'username' => 'Username',
+        'password_hash' => 'Password Hash',
+        'create_at' => 'Create At',
+        'update_at' => 'Update At',
+        'status' => 'Status',
+        'auth_key' => 'Auth Key',
+        'password_reset_token' => 'Password Reset Token',
         ];
+    }
+
+    public function beforeSave($insert)
+    {
+        if(parent::beforeSave($insert)) {
+            if($this->isNewRecord) {
+                $this->auth_key = \Yii::$app->security->generateRandomString();
+            }
+        }
     }
 
     /**
@@ -89,7 +104,6 @@ class Admin extends \yii\db\ActiveRecord
     public function setPassword($password)
     {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
-        echo $this->password_hash;
     }
 
     /**
@@ -99,6 +113,31 @@ class Admin extends \yii\db\ActiveRecord
     public static function find()
     {
         return new AdminQuery(get_called_class());
+    }
+
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        return static::findOne(['access_token' => $token]);
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getAuthKey()
+    {
+        return $this->auth_key;
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        return $this->auth_key === $authKey;
     }
 
 }

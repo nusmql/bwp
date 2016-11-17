@@ -3,6 +3,7 @@ namespace backend\models;
 
 use Yii;
 use yii\base\Model;
+use yii\helpers\VarDumper;
 
 /**
  * Login form
@@ -41,14 +42,13 @@ class AdminLoginForm extends Model
     public function validatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            echo Yii::$app->security->generatePasswordHash('bwoil123456');
             /**
              * username: bwoiladmin
              * password: bwoil123456
              * password_hash:$2y$13$WtQTCHFQh5dWvi.4U8z.eu4ss9ET98Pe9wAQ8t36n8U2UZCXaqaSS
              *
              */
-            exit;
+
             $admin = $this->getAdmin();
             if (!$admin || !$admin->validatePassword($this->password)) {
                 $this->addError($attribute, 'Incorrect username or password.');
