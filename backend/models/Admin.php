@@ -13,8 +13,8 @@ use yii\web\IdentityInterface;
  * @property integer $id
  * @property string $username
  * @property string $password_hash
- * @property integer $create_at
- * @property integer $update_at
+ * @property integer $created_at
+ * @property integer $updated_at
  * @property integer $status
  * @property string $auth_key
  * @property string $password_reset_token
@@ -48,8 +48,8 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-        [['username', 'password_hash', 'create_at', 'update_at', 'auth_key'], 'required'],
-        [['create_at', 'update_at', 'status'], 'integer'],
+        [['username', 'password_hash', 'created_at', 'updated_at', 'auth_key'], 'required'],
+        [['created_at', 'updated_at', 'status'], 'integer'],
         [['username', 'password_hash', 'password_reset_token'], 'string', 'max' => 255],
         [['auth_key'], 'string', 'max' => 32],
         [['username'], 'unique'],
@@ -68,8 +68,8 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
         'id' => 'ID',
         'username' => 'Username',
         'password_hash' => 'Password Hash',
-        'create_at' => 'Create At',
-        'update_at' => 'Update At',
+        'created_at' => 'Created At',
+        'updated_at' => 'Updated At',
         'status' => 'Status',
         'auth_key' => 'Auth Key',
         'password_reset_token' => 'Password Reset Token',

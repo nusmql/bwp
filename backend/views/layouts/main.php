@@ -9,6 +9,7 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
+use yii\bootstrap\Dropdown;
 
 AppAsset::register($this);
 ?>
@@ -28,15 +29,28 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => 'Dashboard',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
+
+    $menuItems[] = [
+        'label' => 'Account',
+        'items' => [
+            ['label' => 'User', 'url' => '/user/index'],
+            ['label' => 'Company', 'url' => '/company/index']
+        ],
     ];
+
+    $menuItems[] = [
+        'label' => 'Settings',
+        'items' => [
+            ['label' => 'Manage Staff', 'url' => '/user/index'],
+        ],
+    ];
+
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
