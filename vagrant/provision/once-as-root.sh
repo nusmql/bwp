@@ -32,8 +32,8 @@ echo ${timezone} | tee /etc/timezone
 dpkg-reconfigure --frontend noninteractive tzdata
 
 info "Prepare root password for MySQL"
-debconf-set-selections <<< "mysql-server-5.6 mysql-server/root_password password \"''\""
-debconf-set-selections <<< "mysql-server-5.6 mysql-server/root_password_again password \"''\""
+debconf-set-selections <<< "mysql-server-5.6 mysql-server/root_password password \"'bwoil'\""
+debconf-set-selections <<< "mysql-server-5.6 mysql-server/root_password_again password \"'bwoil'\""
 echo "Done!"
 
 info "Update OS software"

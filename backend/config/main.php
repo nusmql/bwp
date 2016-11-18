@@ -37,14 +37,20 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            'assignmentTable' => 'admin_auth_assignment',
+            'itemChildTable' => 'admin_auth_item_child',
+            'itemTable' => 'admin_auth_item',
+            'ruleTable' => 'admin_auth_rule',
+        ],
     ],
     'params' => $params,
 ];
