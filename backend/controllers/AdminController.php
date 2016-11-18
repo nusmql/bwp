@@ -3,17 +3,16 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\Company;
+use backend\models\Admin;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 
 /**
- * CompanyController implements the CRUD actions for Company model.
+ * AdminController implements the CRUD actions for Admin model.
  */
-class CompanyController extends Controller
+class AdminController extends Controller
 {
     /**
      * @inheritdoc
@@ -27,47 +26,17 @@ class CompanyController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'actions' => ['index'],
-                        'roles' => ['manageCompany'],
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['view'],
-                        'roles' => ['viewCompany'],
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['create'],
-                        'roles' => ['createCompany'],
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['update'],
-                        'roles' => ['updateCompany'],
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['delete'],
-                        'roles' => ['deleteCompany'],
-                    ],
-                ],
-            ],
         ];
     }
 
     /**
-     * Lists all Company models.
+     * Lists all Admin models.
      * @return mixed
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Company::find(),
+            'query' => Admin::find(),
         ]);
 
         return $this->render('index', [
@@ -76,7 +45,7 @@ class CompanyController extends Controller
     }
 
     /**
-     * Displays a single Company model.
+     * Displays a single Admin model.
      * @param integer $id
      * @return mixed
      */
@@ -88,16 +57,25 @@ class CompanyController extends Controller
     }
 
     /**
-     * Creates a new Company model.
+     * Creates a new Admin model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Company();
+        $model = new Admin();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->setPassword($model->password);
+            $model->generateAuthKey();
+
+            if($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                var_dump($model->attributes);
+                var_dump($model->getErrors()); exit;
+            }
+
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -106,7 +84,7 @@ class CompanyController extends Controller
     }
 
     /**
-     * Updates an existing Company model.
+     * Updates an existing Admin model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -125,7 +103,7 @@ class CompanyController extends Controller
     }
 
     /**
-     * Deletes an existing Company model.
+     * Deletes an existing Admin model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -138,15 +116,15 @@ class CompanyController extends Controller
     }
 
     /**
-     * Finds the Company model based on its primary key value.
+     * Finds the Admin model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Company the loaded model
+     * @return Admin the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Company::findOne($id)) !== null) {
+        if (($model = Admin::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

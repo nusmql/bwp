@@ -47,7 +47,7 @@ AppAsset::register($this);
     $menuItems[] = [
         'label' => 'Settings',
         'items' => [
-            ['label' => 'Manage Staff', 'url' => '/user/index'],
+            ['label' => 'Manage Staff', 'url' => '/admin/index'],
         ],
     ];
 
