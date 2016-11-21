@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "user".
@@ -21,6 +22,9 @@ use Yii;
  */
 class User extends \yii\db\ActiveRecord
 {
+    const STATUS_DELETED = 0;
+    const STATUS_ACTIVE = 10;
+
     /**
      * @inheritdoc
      */
@@ -29,13 +33,25 @@ class User extends \yii\db\ActiveRecord
         return 'user';
     }
 
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+        ];
+    }
+
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['name', 'email', 'created_at', 'updated_at', 'company_id'], 'required'],
+            [['name', 'email', 'company_id'], 'required'],
             [['status', 'created_at', 'updated_at', 'company_id'], 'integer'],
             [['name', 'email'], 'string', 'max' => 255],
             [['email'], 'unique'],
@@ -81,5 +97,14 @@ class User extends \yii\db\ActiveRecord
     public function getCompany()
     {
         return $this->hasOne(Company::className(), ['id' => 'company_id']);
+    }
+
+
+    public static function getStatusListData()
+    {
+        return [
+            self::STATUS_ACTIVE => 'Active',
+            self::STATUS_DELETED => 'Disable'
+        ];
     }
 }

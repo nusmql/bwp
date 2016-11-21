@@ -32,9 +32,18 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'email:email',
             'status',
-            'created_at',
-            'updated_at',
-            'company_id',
+            [
+                'label' => 'Create Time',
+                'value' => Yii::$app->formatter->asDatetime($model->created_at)
+            ],
+            [
+                'label' => 'Update Time',
+                'value' => Yii::$app->formatter->asDatetime($model->updated_at)
+            ],
+            [
+                'label' => 'Company',
+                'value' => $model->company->name
+            ],
         ],
     ]) ?>
 

@@ -8,6 +8,8 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\models\Company;
+use yii\helpers\ArrayHelper;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -65,11 +67,20 @@ class UserController extends Controller
     {
         $model = new User();
 
+        // prepare company list data
+        $data = Company::find()
+            ->select(['id', 'name'])
+            ->asArray()
+            ->all();
+
+        $companies = ArrayHelper::map($data, 'id', 'name');
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'data' => $companies,
             ]);
         }
     }
