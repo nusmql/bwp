@@ -9,8 +9,6 @@ use Yii;
  *
  * @property string $name
  * @property integer $id
- *
- * @property User[] $users
  */
 class Company extends \yii\db\ActiveRecord
 {
@@ -39,16 +37,8 @@ class Company extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'name' => 'Name',
-            'id' => 'ID',
+            'name' => Yii::t('app', 'Name'),
+            'id' => Yii::t('app', 'ID'),
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUsers()
-    {
-        return $this->hasMany(User::className(), ['company_id' => 'id']);
     }
 }

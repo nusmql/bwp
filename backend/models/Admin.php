@@ -4,7 +4,6 @@ namespace backend\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
@@ -20,7 +19,7 @@ use yii\web\IdentityInterface;
  * @property string $auth_key
  * @property string $password_reset_token
  */
-class Admin extends \yii\db\ActiveRecord implements IdentityInterface
+class Admin extends \common\models\Admin implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
@@ -62,24 +61,6 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-        'id' => 'ID',
-        'username' => 'Username',
-        'email' => 'Email',
-        'password_hash' => 'Password Hash',
-        'created_at' => 'Created At',
-        'updated_at' => 'Updated At',
-        'status' => 'Status',
-        'auth_key' => 'Auth Key',
-        'password_reset_token' => 'Password Reset Token',
-        ];
-    }
-
     public function beforeSave($insert)
     {
         if(parent::beforeSave($insert)) {
@@ -87,6 +68,7 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
             //     $this->password_hash = Yii::$app->security->generatePasswordHash();
             //     $this->auth_key = \Yii::$app->security->generateRandomString();
             // }
+            return true;
         }
     }
 

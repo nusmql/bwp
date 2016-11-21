@@ -3,12 +3,12 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\User;
+use backend\models\User;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use common\models\Company;
+use backend\models\Company;
 use yii\helpers\ArrayHelper;
 
 /**

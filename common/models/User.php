@@ -3,7 +3,6 @@
 namespace common\models;
 
 use Yii;
-use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "user".
@@ -15,16 +14,9 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $created_at
  * @property integer $updated_at
  * @property integer $company_id
- *
- * @property AuthAssignment[] $authAssignments
- * @property LocalOauth[] $localOauths
- * @property Company $company
  */
 class User extends \yii\db\ActiveRecord
 {
-    const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
-
     /**
      * @inheritdoc
      */
@@ -33,25 +25,13 @@ class User extends \yii\db\ActiveRecord
         return 'user';
     }
 
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::className(),
-        ];
-    }
-
-
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['name', 'email', 'company_id'], 'required'],
+            [['name', 'email', 'created_at', 'updated_at', 'company_id'], 'required'],
             [['status', 'created_at', 'updated_at', 'company_id'], 'integer'],
             [['name', 'email'], 'string', 'max' => 255],
             [['email'], 'unique'],
@@ -65,46 +45,13 @@ class User extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'email' => 'Email',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'company_id' => 'Company ID',
-        ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAuthAssignments()
-    {
-        return $this->hasMany(AuthAssignment::className(), ['user_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLocalOauths()
-    {
-        return $this->hasMany(LocalOauth::className(), ['user_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCompany()
-    {
-        return $this->hasOne(Company::className(), ['id' => 'company_id']);
-    }
-
-
-    public static function getStatusListData()
-    {
-        return [
-            self::STATUS_ACTIVE => 'Active',
-            self::STATUS_DELETED => 'Disable'
+            'id' => Yii::t('app', 'ID'),
+            'name' => Yii::t('app', 'Name'),
+            'email' => Yii::t('app', 'Email'),
+            'status' => Yii::t('app', 'Status'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+            'company_id' => Yii::t('app', 'Company ID'),
         ];
     }
 }
