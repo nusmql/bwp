@@ -1,11 +1,11 @@
 <?php
 
-namespace backend\models;
+namespace frontend\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
-use backend\models\Company;
+use frontend\models\Company;
 
 /**
  * This is the model class for table "user".
@@ -22,16 +22,15 @@ use backend\models\Company;
  * @property LocalOauth[] $localOauths
  * @property Company $company
  */
-class User extends \common\models\User
+class User extends \common\models\User  implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
 
     const SCENARIO_CREATE = 'create';
-    const SCENARIO_RESETPASSWORD = 'resetpassword';
+    const SCENARIO_UPDATE = 'update';
 
     public $password;
-    public $password_repeat;
 
     /**
      * @inheritdoc
@@ -56,7 +55,6 @@ class User extends \common\models\User
             [['mobile'], 'string', 'max' => 45],
             [['email'], 'unique'],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Company::className(), 'targetAttribute' => ['company_id' => 'id']],
-            [['password_repeat'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_RESETPASSWORD]],
         ];
     }
 
@@ -64,8 +62,8 @@ class User extends \common\models\User
     {
         $scenarios = parent::scenarios();
 
-        $scenarios[self::SCENARIO_CREATE] = ['username', 'email', 'password', 'password_repeat', 'first_name', 'last_name'];
-        $scenarios[self::SCENARIO_RESETPASSWORD] = ['password', 'password_repeat',];
+        $scenarios[self::SCENARIO_CREATE] = ['username', 'email', 'password', 'first_name', 'last_name'];
+        $scenarios[self::SCENARIO_UPDATE] = ['username', 'email', 'first_name', 'last_name'];
         return $scenarios; 
     }
 
@@ -108,6 +106,103 @@ class User extends \common\models\User
     }
 
     /**
+     * @inheritdoc
+     */
+    public static function findIdentity($id)
+    {
+        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+    }
+
+    /**
+     * Finds user by username
+     *
+     * @param string $username
+     * @return static|null
+     */
+    public static function findByUsername($username)
+    {
+        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+    }
+
+    /**
+     * Finds user by password reset token
+     *
+     * @param string $token password reset token
+     * @return static|null
+     */
+    public static function findByPasswordResetToken($token)
+    {
+        if (!static::isPasswordResetTokenValid($token)) {
+            return null;
+        }
+
+        return static::findOne([
+            'password_reset_token' => $token,
+            'status' => self::STATUS_ACTIVE,
+        ]);
+    }
+
+    /**
+     * Finds out if password reset token is valid
+     *
+     * @param string $token password reset token
+     * @return bool
+     */
+    public static function isPasswordResetTokenValid($token)
+    {
+        if (empty($token)) {
+            return false;
+        }
+
+        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
+        return $timestamp + $expire >= time();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getId()
+    {
+        return $this->getPrimaryKey();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAuthKey()
+    {
+        return $this->auth_key;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function validateAuthKey($authKey)
+    {
+        return $this->getAuthKey() === $authKey;
+    }
+
+    /**
+     * Validates password
+     *
+     * @param string $password password to validate
+     * @return bool if password provided is valid for current user
+     */
+    public function validatePassword($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->password_hash);
+    }
+
+    /**
      * Generates password hash from password and sets it to the model
      *
      * @param string $password
@@ -115,16 +210,6 @@ class User extends \common\models\User
     public function setPassword($password)
     {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getAuthKey()
-    {
-        return $this->auth_key;
     }
 
     /**
