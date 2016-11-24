@@ -31,7 +31,7 @@ class User extends \common\models\User
     const SCENARIO_RESETPASSWORD = 'resetpassword';
 
     public $password;
-    public $password_repeat;
+    // public $password_repeat;
 
     /**
      * @inheritdoc
@@ -56,7 +56,7 @@ class User extends \common\models\User
             [['mobile'], 'string', 'max' => 45],
             [['email'], 'unique'],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Company::className(), 'targetAttribute' => ['company_id' => 'id']],
-            [['password_repeat'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_RESETPASSWORD]],
+            // [['password_repeat'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_RESETPASSWORD]],
         ];
     }
 
@@ -64,17 +64,20 @@ class User extends \common\models\User
     {
         $scenarios = parent::scenarios();
 
-        $scenarios[self::SCENARIO_CREATE] = ['username', 'email', 'password', 'password_repeat', 'first_name', 'last_name'];
-        $scenarios[self::SCENARIO_RESETPASSWORD] = ['password', 'password_repeat',];
-        return $scenarios; 
+        // $scenarios[self::SCENARIO_CREATE] = ['username', 'email', 'password', 'password_repeat', 'first_name', 'last_name'];
+        // $scenarios[self::SCENARIO_RESETPASSWORD] = ['password', 'password_repeat',];
+
+        $scenarios[self::SCENARIO_CREATE] = ['username', 'email', 'password', 'first_name', 'last_name'];
+        $scenarios[self::SCENARIO_RESETPASSWORD] = ['password',];
+        return $scenarios;
     }
 
     public function beforeSave($insert)
     {
-        if (parent::beforeSave()) {
+        if (parent::beforeSave($insert)) {
             if($this->isNewRecord) {
-                $this->password_hash = $this->generatePasswordResetToken($this->password);
-                $this->auth_key = $this->generateAuthKey();
+                $this->setPassword($this->password);
+                $this->generateAuthKey();
             }
 
             return true;

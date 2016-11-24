@@ -89,6 +89,7 @@ class UserController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
+            d($model->getErrors());
             return $this->render('update', [
                 'model' => $model,
             ]);
@@ -118,6 +119,17 @@ class UserController extends Controller
     public function actionResetpassword($id)
     {
         $model = $this->findModel($id);
+
+        if(isset($_POST['User']['password'])) {
+            $model->setPassword($_POST['User']['password']);
+            $model->generateAuthKey();
+
+            if($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                d($model->getErrors());exit;
+            }
+        }
 
         return $this->render('resetpassword', [
             'model' => $model

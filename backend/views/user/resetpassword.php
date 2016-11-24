@@ -8,20 +8,26 @@ use backend\models\User;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('backend/user', 'Reset Password');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('backend/user', 'Users'), 'url' => ['resetpassword']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('backend/user', 'Users'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 
 <div class="user-resetpassword">
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1><?= Html::encode($this->title)?></h1>
 
     <div class="resetpassword-form">
 	    <?php $form = ActiveForm::begin(); ?>
 
-	    	<?= $form->field($model, 'password')->textInput(['maxlength' => true]) ?>
+	    	<?= $form->field($model, 'username')->textInput(['readonly' => !$model->isNewRecord]) ?> 
 
-	    	<?= $form->field($model, 'password_repeat')->textInput(['maxlength' => true]) ?>
+	    	<?= $form->field($model, 'email')->textInput(['readonly' => !$model->isNewRecord]) ?> 
+
+	    	<?= $form->field($model, 'password')->textInput([
+	    			'maxlength' => true,
+	    			'placeholder' => Yii::t('backend/user', 'Enter new password'),
+	    		]) ?>
 
 	    <div class="form-group">
 	        <?= Html::submitButton('Confirm', ['class' => 'btn btn-success']) ?>

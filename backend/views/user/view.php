@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
-        <?= Html::a(Yii::t('app', 'Reset Password'), ['resetPassword', 'id' => $model->id], ['class' => 'btn btn-danger']) ?>
+        <?= Html::a(Yii::t('app', 'Reset Password'), ['resetpassword', 'id' => $model->id], ['class' => 'btn btn-danger']) ?>
     </p>
 
     <?= DetailView::widget([
