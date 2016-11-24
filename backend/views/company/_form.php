@@ -11,6 +11,8 @@ use yii\widgets\ActiveForm;
 <div class="company-form">
 
     <?php $form = ActiveForm::begin(); ?>
+    
+    <?= $form->errorSummary($model); ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 

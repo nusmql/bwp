@@ -16,13 +16,14 @@ $data = Company::getListData();
 <div class="user-form">
 
     <?php $form = ActiveForm::begin(); ?>
+
     <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
     <?php 
         if($model->isNewRecord) {
-            echo $form->field($model, 'password')->passwordInput();
+            echo $form->field($model, 'password');
         }
     ?>
 
