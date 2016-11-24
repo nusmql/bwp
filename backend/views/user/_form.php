@@ -5,6 +5,8 @@ use yii\widgets\ActiveForm;
 use yii\jui\AutoComplete;
 use backend\models\User;
 use backend\models\Company;
+use borales\extensions\phoneInput\PhoneInput;
+
 
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
@@ -34,8 +36,13 @@ $data = Company::getListData();
     <?= $form->field($model, 'last_name')->textInput(['maxlength' => true]) ?> 
 
     <?= $form->field($model, 'middle_name')->textInput(['maxlength' => true]) ?> 
-    
-    <?= $form->field($model, 'mobile')->textInput(['maxlength' => true]) ?> 
+
+    <?= $form->field($model, 'mobile')->widget(PhoneInput::className(), [
+        'jsOptions' => [
+            'preferredCountries' => ['sg', 'cn'],
+            'nationalMode' => false,
+        ]
+    ]) ?> 
 
     <div class="form-inline">
         <?= $form->field($model, 'phone_country')->textInput(['placeholder' => 'code', 'style'=> 'width:90px;'])->label(false) ?> 

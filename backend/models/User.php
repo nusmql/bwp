@@ -7,6 +7,8 @@ use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
 use backend\models\Company;
 use yii\db\Query;
+use borales\extensions\phoneInput\PhoneInputValidator;
+use borales\extensions\phoneInput\PhoneInputBehavior;
 
 /**
  * This is the model class for table "user".
@@ -41,7 +43,11 @@ class User extends \common\models\User
     public function behaviors()
     {
         return [
-            TimestampBehavior::className()
+            TimestampBehavior::className(),
+            [
+                'class' => PhoneInputBehavior::className(),
+                'phoneAttribute' => 'mobile',
+            ],
         ];
     }
 
@@ -78,7 +84,7 @@ class User extends \common\models\User
                     return $model->attributeExist(['email' => $model->email]);
                 }
             ],
-            // [['password_repeat'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_RESETPASSWORD]],
+            [['mobile'], PhoneInputValidator::className()],
         ];
     }
 
@@ -86,11 +92,9 @@ class User extends \common\models\User
     {
         $scenarios = parent::scenarios();
 
-        // $scenarios[self::SCENARIO_CREATE] = ['username', 'email', 'password', 'password_repeat', 'first_name', 'last_name'];
-        // $scenarios[self::SCENARIO_RESETPASSWORD] = ['password', 'password_repeat',];
-
         $scenarios[self::SCENARIO_CREATE] = ['username', 'email', 'password', 'name', 'first_name', 'last_name'];
-        $scenarios[self::SCENARIO_RESETPASSWORD] = ['password',];
+        $scenarios[self::SCENARIO_UPDATE] = ['username', 'email', 'name', 'first_name', 'last_name'];
+        $scenarios[self::SCENARIO_RESETPASSWORD] = ['password'];
         return $scenarios;
     }
 
@@ -101,6 +105,8 @@ class User extends \common\models\User
                 $this->setPassword($this->password);
                 $this->generateAuthKey();
             }
+
+            $this->username = strtolower($this->username);
 
             return true;
         }
