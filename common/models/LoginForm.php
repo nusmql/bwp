@@ -3,6 +3,7 @@ namespace common\models;
 
 use Yii;
 use yii\base\Model;
+use yii\validators\EmailValidator;
 
 /**
  * Login form
@@ -70,7 +71,13 @@ class LoginForm extends Model
     protected function getUser()
     {
         if ($this->_user === null) {
-            $this->_user = User::findByUsername($this->username);
+            if(filter_var($this->username, FILTER_VALIDATE_EMAIL)) {
+                $this->_user = User::findByEmail($this->username);
+            }
+
+            if($this->_user === null) {
+                $this->_user = User::findByUsername($this->username);
+            }
         }
 
         return $this->_user;
