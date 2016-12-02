@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3d9920d58018bd6d26ece28556d5cfc2",
-    "content-hash": "53e19d41858c5332b9bd556a1a221eca",
+    "hash": "e59fff9ad341fd3f2711d7ea66de8ae8",
+    "content-hash": "727f70006d7057b7723ff0bff6bc8c01",
     "packages": [
         {
             "name": "borales/yii2-phone-input",
@@ -505,6 +505,50 @@
             ],
             "description": "Locale functions required by libphonenumber-for-php",
             "time": "2016-10-24 20:49:55"
+        },
+        {
+            "name": "rongcloud/php-sdk",
+            "version": "v1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rongcloud/server-sdk-php-composer.git",
+                "reference": "3e2f214d3a6769f56b4e3f1fc0715a732f82bfe4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rongcloud/server-sdk-php-composer/zipball/3e2f214d3a6769f56b4e3f1fc0715a732f82bfe4",
+                "reference": "3e2f214d3a6769f56b4e3f1fc0715a732f82bfe4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RongCloud\\": "src/RongCloud"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rong Cloud",
+                    "email": "support@rongcloud.cn",
+                    "homepage": "https://github.com/rongcloud/"
+                }
+            ],
+            "description": "Rong Cloud Server SDK in PHP.",
+            "homepage": "http://rong.io",
+            "keywords": [
+                "rlcoud",
+                "rong cloud",
+                "rongCloud",
+                "sdk"
+            ],
+            "time": "2016-08-26 06:09:01"
         },
         {
             "name": "swiftmailer/swiftmailer",

@@ -236,4 +236,5 @@ class User extends \common\models\User  implements IdentityInterface
         $this->password_reset_token = null;
     }
 
+
 }
